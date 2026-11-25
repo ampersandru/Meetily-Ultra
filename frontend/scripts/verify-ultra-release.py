@@ -59,9 +59,13 @@ else:
     for executable in ['meetily-ultra','ffmpeg','llama-helper']:
         file=app/'Contents/MacOS'/executable
         require(architecture in run('lipo','-archs',str(file)).decode(),'Wrong architecture '+executable)
-        build_info=run('xcrun','vtool','-show-build',str(file)).decode()
+        build_info=run('xcrun','vtool','-arch',architecture,'-show-build',str(file)).decode()
         import re
         minimum=re.search(r'\bminos\s+([0-9.]+)',build_info)
+        if minimum is None:
+            # Older Intel sidecars use the pre-10.14 Mach-O load command.
+            legacy=run('otool','-arch',architecture,'-l',str(file)).decode()
+            minimum=re.search(r'cmd LC_VERSION_MIN_MACOSX\s+cmdsize \d+\s+version ([0-9.]+)',legacy)
         require(minimum is not None,'Missing Mach-O deployment target '+executable)
         parts=tuple(int(x) for x in minimum.group(1).split('.'))
         require((parts+(0,0))[:3] <= (14,2,0),'Binary requires newer macOS: '+executable)
