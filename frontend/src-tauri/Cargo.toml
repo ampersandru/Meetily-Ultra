@@ -1,13 +1,17 @@
 [package]
 name = "meetily"
-version = "0.2.20"
-description = "Meetily - Actually Free: privacy-first AI meeting assistant"
-authors = ["TylerBuza"]
-repository = "https://github.com/TylerBuza/Meetily-ActuallyFree"
+version = "0.3.0"
+description = "Meetily Ultra: privacy-first AI meeting assistant"
+authors = ["ampersandru", "TylerBuza", "Meetily contributors"]
+repository = "https://github.com/ampersandru/Meetily-Ultra"
 edition = "2021"
 rust-version = "1.77.2"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[[bin]]
+name = "meetily-ultra"
+path = "src/main.rs"
 
 [lib]
 name = "app_lib"

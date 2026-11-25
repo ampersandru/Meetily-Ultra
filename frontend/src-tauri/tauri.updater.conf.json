@@ -1,8 +1,8 @@
 {
-  "build": {
-    "beforeBuildCommand": ""
-  },
-  "bundle": {
-    "createUpdaterArtifacts": true
-  }
+    "build": {
+        "beforeBuildCommand": ""
+    },
+    "bundle": {
+        "createUpdaterArtifacts": true
+    }
 }

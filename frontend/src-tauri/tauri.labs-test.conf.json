@@ -1,7 +1,7 @@
 {
-  "productName": "Meetily Labs Local Test",
-  "identifier": "com.meetily.labs-test",
-  "bundle": {
-    "createUpdaterArtifacts": false
-  }
+    "productName": "Meetily Ultra",
+    "identifier": "com.ampersandru.meetily-ultra",
+    "bundle": {
+        "createUpdaterArtifacts": false
+    }
 }

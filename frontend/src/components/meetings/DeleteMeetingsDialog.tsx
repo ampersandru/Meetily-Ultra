@@ -30,12 +30,12 @@ export function DeleteMeetingsDialog({ open, onOpenChange, count, onDelete }: {
             <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-af-danger/[0.12] text-af-danger"><AlertTriangle className="h-4 w-4" /></span>
             <div className="min-w-0 space-y-1">
               <DialogTitle>{count === 1 ? 'Delete this meeting?' : `Delete ${count} meetings?`}</DialogTitle>
-              <DialogDescription>Choose whether to keep the recording folders. The Meetily transcript, summary, notes, and action items are removed either way.</DialogDescription>
+              <DialogDescription>Choose whether to keep the recording folders. The Meetily Ultra transcript, summary, notes, and action items are removed either way.</DialogDescription>
             </div>
           </div>
         </DialogHeader>
         <div className="space-y-2 text-xs text-af-text-3">
-          <p><strong className="text-af-text">Remove from Meetily:</strong> Keep the local audio, transcript files, images, and other files in the recordings folder.</p>
+          <p><strong className="text-af-text">Remove from Meetily Ultra:</strong> Keep the local audio, transcript files, images, and other files in the recordings folder.</p>
           <p><strong className="text-af-text">Delete local files too:</strong> Permanently remove the meeting’s recording folder and its contents.</p>
         </div>
         <DialogFooter className="flex-wrap gap-2">

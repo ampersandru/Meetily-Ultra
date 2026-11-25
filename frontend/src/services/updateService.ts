@@ -5,6 +5,7 @@
  * Provides update checking, downloading, and installation functionality.
  */
 
+import { AUTO_UPDATES_ENABLED } from '@/lib/branding';
 import { check } from '@tauri-apps/plugin-updater';
 import { getVersion } from '@tauri-apps/api/app';
 
@@ -38,6 +39,7 @@ export class UpdateService {
    * @returns Promise with update information
    */
   async checkForUpdates(force = false): Promise<UpdateInfo> {
+    if (!AUTO_UPDATES_ENABLED) return {available: false, currentVersion: await getVersion()};
     // Prevent concurrent update checks
     if (this.updateCheckInProgress) {
       throw new Error('Update check already in progress');

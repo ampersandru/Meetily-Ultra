@@ -602,3 +602,5 @@ Voice Profiles remains opt-in beta after promotion; see its qualification in
 [LABS_MACWHISPER_FEATURES.md](LABS_MACWHISPER_FEATURES.md).
 
 AI summary speaker-name suggestions, display-only identity boundaries and cache/navigation ownership are documented in [SUMMARY_SPEAKER_SUGGESTIONS.md](SUMMARY_SPEAKER_SUGGESTIONS.md).
+
+Meetily Ultra branding, isolated application identity, manual updates, platform packaging and release verification are documented in [ULTRA_RELEASE.md](ULTRA_RELEASE.md).

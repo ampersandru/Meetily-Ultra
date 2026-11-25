@@ -27,7 +27,7 @@ pub fn create_tray<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<()> {
         // the menu and never the app. Reserve left-click for "open the window"
         // and leave the menu on right-click, which is what people expect.
         .show_menu_on_left_click(false)
-        .tooltip("Meetily - Actually Free")
+        .tooltip("Meetily Ultra")
         .icon(app.default_window_icon().unwrap().clone())
         .on_menu_event(|app, event| handle_menu_event(app, event.id.as_ref()))
         .on_tray_icon_event(|tray, event| {
@@ -205,13 +205,15 @@ fn stop_recording_handler<R: Runtime>(app: &AppHandle<R>) {
     });
 }
 
-fn check_updates_handler<R: Runtime>(app: &AppHandle<R>) {
-    focus_main_window(app);
-    if let Some(window) = app.get_webview_window("main") {
-        let _ = window.eval(
-            "window.dispatchEvent(new CustomEvent('check-updates-from-tray'))"
-        );
-    }
+fn check_updates_handler<R: Runtime>(_app: &AppHandle<R>) {
+    // Ultra publishes manual installers, not upstream's signed updater feed.
+    tauri::async_runtime::spawn(async move {
+        if let Err(error) = crate::api::api::open_external_url(
+            "https://github.com/ampersandru/Meetily-Ultra/releases".into(),
+        ).await {
+            log::warn!("Could not open Ultra releases: {error}");
+        }
+    });
 }
 
 pub fn update_tray_menu<R: Runtime>(app: &AppHandle<R>) {
@@ -394,7 +396,7 @@ fn build_menu<R: Runtime>(
     #[cfg(not(target_os = "macos"))]
     {
         builder = builder
-            .item(&MenuItemBuilder::with_id("check_updates", "Check for Updates").build(app)?);
+            .item(&MenuItemBuilder::with_id("check_updates", "Download Updates").build(app)?);
     }
 
     builder

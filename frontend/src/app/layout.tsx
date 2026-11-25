@@ -103,7 +103,7 @@ const inlineChunkErrorHandler = `
         var now = Date.now();
         if (!last || (now - parseInt(last, 10)) > 3000) {
           sessionStorage.setItem(RELOAD_KEY, String(now));
-          console.warn('[Meetily] ChunkLoadError detected in WebView2. Reloading in 300ms...');
+          console.warn('[Meetily Ultra] ChunkLoadError detected in WebView2. Reloading in 300ms...');
           setTimeout(function() {
             window.location.reload();
           }, 300);
@@ -346,7 +346,7 @@ export default function RootLayout({
 
         // In-app prompt with a one-click start action.
         toast(promptTitle, {
-          description: active_media ? 'Capture mic + system audio in Meetily.' : promptBody,
+          description: active_media ? 'Capture mic + system audio in Meetily Ultra.' : promptBody,
           duration: 20000,
           action: {
             label: 'Start recording',

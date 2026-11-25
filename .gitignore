@@ -93,3 +93,6 @@ frontend/MeetilyProgress.obj
 CLAUDE.md
 dist-labs-cuda-test/
 .cargo/
+
+# Meetily Ultra build outputs
+dist-ultra/

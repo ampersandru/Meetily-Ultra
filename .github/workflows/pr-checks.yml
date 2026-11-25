@@ -2,7 +2,7 @@ name: PR frontend checks
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [codex/meetily-ultra]
 permissions:
   contents: read
 concurrency:

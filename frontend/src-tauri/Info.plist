@@ -3,8 +3,8 @@
 <plist version="1.0">
 <dict>
     <key>NSMicrophoneUsageDescription</key>
-    <string>This application needs access to your microphone to record meeting audio.</string>
+    <string>Meetily Ultra needs access to your microphone to record meeting audio.</string>
     <key>NSAudioCaptureUsageDescription</key>
-    <string>This application needs permission to capture system audio output for meeting transcription and recording.</string>
+    <string>Meetily Ultra needs permission to capture system audio output for meeting transcription and recording.</string>
 </dict>
 </plist>

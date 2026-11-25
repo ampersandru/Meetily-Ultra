@@ -1,3 +1,4 @@
+import { AUTO_UPDATES_ENABLED } from '@/lib/branding';
 import React, { useState, useEffect } from "react";
 import { Spinner } from '@/components/ui/spinner';
 import { getVersion } from '@tauri-apps/api/app';
@@ -55,21 +56,21 @@ export function About() {
                 <div className="mb-3">
                     <Image
                         src="icon_128x128.png"
-                        alt="Meetily Logo"
+                        alt="Meetily Ultra Logo"
                         width={64}
                         height={64}
                         className="mx-auto"
                     />
                 </div>
-                {/* <h1 className="text-xl font-bold text-af-text">Meetily</h1> */}
+                {/* <h1 className="text-xl font-bold text-af-text">Meetily Ultra</h1> */}
                 <span className="text-sm text-af-text-3"> v{currentVersion}</span>
                 <p className="text-medium text-af-text-2 mt-1">
-                    Real-time notes and summaries that never leave your machine.
+                    Local-first transcription, speaker tools and AI meeting summaries.
                 </p>
                 <div className="mt-3">
-                    {platform === 'macos' ? (
+                    {(!AUTO_UPDATES_ENABLED || platform === 'macos') ? (
                         <Button
-                            onClick={() => openExternal('https://github.com/TylerBuza/Meetily-ActuallyFree/releases')}
+                            onClick={() => openExternal('https://github.com/ampersandru/Meetily-Ultra/releases')}
                             variant="outline"
                             size="sm"
                             className="text-xs"
@@ -108,7 +109,7 @@ export function About() {
 
             {/* Features Grid - Compact */}
             <div className="space-y-3">
-                <h2 className="text-base font-semibold text-af-text">What makes Meetily different</h2>
+                <h2 className="text-base font-semibold text-af-text">What makes Meetily Ultra different</h2>
                 <div className="grid grid-cols-2 gap-2">
                     <div className="bg-af-panel-2 rounded p-3 hover:bg-af-panel-2 transition-colors">
                         <h3 className="font-bold text-sm text-af-text mb-1">Privacy-first</h3>
@@ -132,14 +133,14 @@ export function About() {
             {/* Footer - Compact */}
             <div className="pt-2 border-t border-af-border text-center">
                 <p className="text-xs text-af-text-4">
-                    Meetily - Actually Free · Open source (MIT)
+                    Meetily Ultra · Open source (MIT)
                 </p>
                 <p className="mt-1 text-xs text-af-text-3">
-                    Tyler Buza ·{' '}
+                    ampersandru ·{' '}
                     <button
                         type="button"
                         className="underline underline-offset-2 transition-colors hover:text-af-accent"
-                        onClick={() => openExternal('https://github.com/TylerBuza')}
+                        onClick={() => openExternal('https://github.com/ampersandru')}
                     >
                         GitHub
                     </button>
@@ -147,9 +148,9 @@ export function About() {
                     <button
                         type="button"
                         className="underline underline-offset-2 transition-colors hover:text-af-accent"
-                        onClick={() => openExternal('https://buza.dev')}
+                        onClick={() => openExternal('https://github.com/TylerBuza/Meetily-ActuallyFree')}
                     >
-                        buza.dev
+                        Upstream credits
                     </button>
                 </p>
             </div>

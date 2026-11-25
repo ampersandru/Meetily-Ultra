@@ -6,6 +6,7 @@ import { UpdateInfo } from '@/services/updateService';
 import { UpdateDialog } from './UpdateDialog';
 import { setUpdateDialogCallback, showUpdateNotification } from './UpdateNotification';
 import { invoke } from '@tauri-apps/api/core';
+import { AUTO_UPDATES_ENABLED } from '@/lib/branding';
 import { usePlatform } from '@/hooks/usePlatform';
 import { toast } from 'sonner';
 import type { CudaReconfigurationStatus } from '@/lib/transcription-acceleration';
@@ -29,7 +30,7 @@ export function UpdateCheckProvider({
   const platform = usePlatform();
   // macOS ships as a separate DMG release with no Tauri updater artifact or
   // latest.json entry. Calling the Windows updater path there is misleading.
-  const updatesSupported = platform !== 'macos';
+  const updatesSupported = AUTO_UPDATES_ENABLED && platform !== 'macos';
   const [showDialog, setShowDialog] = useState(false);
   const [checkOnMount, setCheckOnMount] = useState(false);
 
@@ -59,7 +60,7 @@ export function UpdateCheckProvider({
         if (status.reconfigurationRequired && reconfigurationUrl) {
           toast.warning('NVIDIA CUDA is ready', {
             id: 'cuda-reconfiguration-status',
-            description: `Rerun Meetily setup to replace the ${status.compiledBackend} build with the CUDA build.`,
+            description: `Rerun Meetily Ultra setup to replace the ${status.compiledBackend} build with the CUDA build.`,
             duration: 30000,
             action: {
               label: 'Download setup',
@@ -71,7 +72,7 @@ export function UpdateCheckProvider({
         } else if (status.driverUpdateRequired) {
           toast.warning('NVIDIA driver update recommended', {
             id: 'cuda-reconfiguration-status',
-            description: 'Install a current NVIDIA driver, then reopen Meetily to recheck CUDA support.',
+            description: 'Install a current NVIDIA driver, then reopen Meetily Ultra to recheck CUDA support.',
             duration: 30000,
             action: {
               label: 'Get driver',

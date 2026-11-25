@@ -46,6 +46,6 @@ export async function openCrashReportIssue(report: PendingCrashReport): Promise<
   })
 
   await invoke('open_external_url', {
-    url: `https://github.com/TylerBuza/Meetily-ActuallyFree/issues/new?${query.toString()}`,
+    url: `https://github.com/ampersandru/Meetily-Ultra/issues/new?${query.toString()}`,
   })
 }

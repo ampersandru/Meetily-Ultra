@@ -190,7 +190,7 @@ function WatchFoldersCard() {
         <div className="min-w-0 flex-1">
           <h4 className="text-sm font-semibold text-af-text">Watch folders</h4>
           <p className="mt-0.5 text-[13px] leading-relaxed text-af-text-3">
-            Automatically monitor folders on your computer for new audio and video files. When files are copied or downloaded into these folders, Meetily automatically imports and transcribes them in the background.
+            Automatically monitor folders on your computer for new audio and video files. When files are copied or downloaded into these folders, Meetily Ultra automatically imports and transcribes them in the background.
           </p>
           <p className="mt-1.5 text-[11px] leading-relaxed text-af-text-4">
             Checked in the background every 5 seconds.

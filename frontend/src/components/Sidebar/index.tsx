@@ -333,7 +333,7 @@ const Sidebar: React.FC = () => {
             <DialogTrigger asChild>
               <button
                 type="button"
-                aria-label="About Meetily"
+                aria-label="About Meetily Ultra"
                 tabIndex={expanded ? undefined : -1}
                 aria-hidden={expanded ? undefined : true}
                 className={cn(
@@ -343,13 +343,14 @@ const Sidebar: React.FC = () => {
                 )}
               >
                 <span className="whitespace-nowrap text-base font-bold tracking-tight text-blue-500">
-                  Meetily <span className="text-blue-400/70">· Actually Free</span>
+                  <img src="/ultra-mark.svg" alt="" className="mr-2 inline-block h-7 w-7 rounded-lg" />
+                  Meetily <span className="text-cyan-400">Ultra</span>
                 </span>
               </button>
             </DialogTrigger>
             <DialogContent>
               <VisuallyHidden>
-                <DialogTitle>About Meetily</DialogTitle>
+                <DialogTitle>About Meetily Ultra</DialogTitle>
               </VisuallyHidden>
               <About />
             </DialogContent>

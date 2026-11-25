@@ -1,4 +1,4 @@
-//! Native Windows toast notifications shown as "Meetily - Actually Free"
+//! Native Windows toast notifications shown as "Meetily Ultra"
 //! (with our icon) instead of "Windows PowerShell".
 //!
 //! ## Why this module exists
@@ -6,7 +6,7 @@
 //! toast when it believes the app is *installed*. It explicitly skips the AUMID
 //! when the running exe sits in a directory ending with `target\debug` or
 //! `target\release` (see the plugin's `desktop.rs`). This portable fork ships
-//! and runs `target\release\meetily.exe`, so the plugin never sets an AUMID and
+//! and runs `target\release\meetily-ultra.exe`, so the plugin never sets an AUMID and
 //! Windows falls back to attributing every toast to PowerShell's AUMID — which
 //! is why the meeting-detected toast reads "Windows PowerShell".
 //!
@@ -33,10 +33,10 @@ use std::sync::Once;
 
 /// Stable AppUserModelID for this app. This must match `tauri.conf.json`'s
 /// identifier and the AUMID written to installer-created shortcuts.
-pub const APP_USER_MODEL_ID: &str = "com.meetily.ai";
+pub const APP_USER_MODEL_ID: &str = "com.ampersandru.meetily-ultra";
 
 /// Friendly name Windows shows as the toast's source.
-const DISPLAY_NAME: &str = "Meetily - Actually Free";
+const DISPLAY_NAME: &str = "Meetily Ultra";
 
 /// App icon embedded at compile time so `IconUri` always has a real file to
 /// point at, regardless of how the portable app was unpacked. Path is relative
@@ -108,7 +108,7 @@ fn register_aumid(icon: &Path) -> std::io::Result<()> {
     Ok(())
 }
 
-/// Show a native toast attributed to Meetily, with a **Start recording** action.
+/// Show a native toast attributed to Meetily Ultra, with a **Start recording** action.
 /// Button (and body click) emit `start-recording-from-notification` so the UI
 /// can start capture the same way as the sidebar / in-app toast.
 pub fn show_toast<R: tauri::Runtime>(
@@ -125,7 +125,7 @@ pub fn show_toast<R: tauri::Runtime>(
     Toast::new(APP_USER_MODEL_ID)
         .title(title)
         .text1(body)
-        .text2("Tap Start recording to begin in Meetily.")
+        .text2("Tap Start recording to begin in Meetily Ultra.")
         .duration(Duration::Long)
         .add_button("Start recording", "start_recording")
         .on_activated(move |action| {

@@ -6,7 +6,7 @@ import { invoke } from "@tauri-apps/api/core"
 import { Github, Shield, Cpu, Heart } from "lucide-react"
 
 /**
- * About panel for Meetily - Actually Free. Shows version, a short description,
+ * About panel for Meetily Ultra. Shows version, a short description,
  * and links to the source and privacy policy. Purely informational.
  */
 export function AboutSettings() {
@@ -27,7 +27,7 @@ export function AboutSettings() {
     invoke('open_external_url', { url }).catch((e) => console.error('Failed to open URL:', e));
   };
 
-  const REPO_URL = 'https://github.com/TylerBuza/Meetily-ActuallyFree';
+  const REPO_URL = 'https://github.com/ampersandru/Meetily-Ultra';
   const ORIGINAL_MEETILY_URL = 'https://github.com/Zackriya-Solutions/meeting-minutes';
   const AUTHOR_URL = 'https://buza.dev';
 
@@ -36,16 +36,16 @@ export function AboutSettings() {
       {/* Identity card */}
       <div className="rounded-2xl border border-af-border bg-af-panel-2/40 p-5">
         <div className="flex items-center gap-4">
-          <Image src="/logo-collapsed.png" alt="Meetily" width={56} height={56} className="h-14 w-14 shrink-0 rounded-2xl shadow-sm" />
+          <Image src="/logo-collapsed.png" alt="Meetily Ultra" width={56} height={56} className="h-14 w-14 shrink-0 rounded-2xl shadow-sm" />
           <div>
-            <h3 className="text-lg font-semibold text-af-text">Meetily · Actually Free</h3>
+            <h3 className="text-lg font-semibold text-af-text">Meetily Ultra</h3>
             <p className="text-sm text-af-text-2">
               Version {version} · Privacy-first, on-device meeting assistant
             </p>
           </div>
         </div>
         <p className="mt-4 text-sm text-af-text-2 leading-relaxed">
-          A free, open fork of Meetily that unlocks every feature for everyone. It captures,
+          A free community fork of Meetily — ActuallyFree. It captures,
           transcribes and summarizes your meetings entirely on your own machine — with GPU
           acceleration, bring-your-own-key cloud models, and local-first data ownership.
         </p>
@@ -61,7 +61,7 @@ export function AboutSettings() {
         <div className="rounded-2xl border border-af-border bg-af-panel-2/40 p-4">
           <Shield className="w-5 h-5 text-af-success mb-2" />
           <div className="text-sm font-medium text-af-text">Private</div>
-          <div className="text-xs text-af-text-3">No telemetry, nothing leaves your PC</div>
+          <div className="text-xs text-af-text-3">Local by default; cloud models are optional</div>
         </div>
         <div className="rounded-2xl border border-af-border bg-af-panel-2/40 p-4">
           <Heart className="w-5 h-5 text-pink-500 mb-2" />
@@ -81,7 +81,7 @@ export function AboutSettings() {
           <span className="text-sm text-af-text">Source code on GitHub</span>
         </button>
         <button
-          onClick={() => openUrl(`${REPO_URL}/blob/main/PRIVACY_POLICY.md`)}
+          onClick={() => openUrl(`${REPO_URL}/blob/codex/meetily-ultra/PRIVACY_POLICY.md`)}
           className="flex items-center gap-3 w-full text-left px-3 py-2 rounded-md border border-af-border hover:border-af-accent/40 hover:bg-af-accent/10 transition-colors"
         >
           <Shield className="w-4 h-4 text-af-text-2" />
@@ -107,7 +107,7 @@ export function AboutSettings() {
             onClick={() => openUrl(AUTHOR_URL)}
             className="text-af-accent hover:underline"
           >
-            Meetily - Actually Free fork by Tyler Buza
+            Based on ActuallyFree by Tyler Buza; Ultra by ampersandru
           </button>
         </p>
       </div>
