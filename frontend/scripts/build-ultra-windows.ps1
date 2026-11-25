@@ -84,7 +84,14 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'Ultra installer packaging failed' }
   } finally { Pop-Location }
   $env:PATH = "$tauri/binaries/onnxruntime;$env:PATH"
-  cargo test --locked --release -p meetily --lib --target $target --no-default-features --features $features
+  $hardwareTestArgs = @()
+  if ($env:GITHUB_ACTIONS -eq 'true') {
+    # Hosted runners have no output endpoint. This hardware integration test is
+    # still exercised by the complete local qualification suite on a workstation.
+    Write-Host 'Headless runner: excluding the physical default-output-device integration test.'
+    $hardwareTestArgs = @('--','--skip','audio::playback_monitor::tests::test_get_output_device')
+  }
+  cargo test --locked --release -p meetily --lib --target $target --no-default-features --features $features @hardwareTestArgs
   if ($LASTEXITCODE -ne 0) { throw 'Native regression tests failed' }
   python frontend/scripts/verify-ultra-release.py windows $target $variant
   if ($LASTEXITCODE -ne 0) { throw 'Installer verification failed' }
