@@ -4,6 +4,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 CONFIG = json.loads((ROOT/'frontend/src-tauri/tauri.conf.json').read_text())
 VERSION = CONFIG['version']
 PLATFORM, TARGET = sys.argv[1:3]
+VARIANT = sys.argv[3] if len(sys.argv)>3 else 'cpu'
 PROFILE = ROOT/'target'/TARGET/'release'
 DIST = ROOT/'dist-ultra'; DIST.mkdir(exist_ok=True)
 def run(*args, **kwargs): return subprocess.check_output(args, **kwargs)
@@ -31,8 +32,13 @@ if PLATFORM == 'windows':
                 require((stage/rel/name).read_bytes()==source,'Wrong packaged runtime '+name)
         require((stage/'runtime-deps/vc_redist.x64.exe').stat().st_size>1_000_000,'Missing Visual C++ runtime installer')
         os.environ['PATH']=str(stage/'binaries/onnxruntime')+os.pathsep+os.environ['PATH']
+        if VARIANT == 'cuda':
+            for name in ['cudart64_13.dll','cublas64_13.dll','cublasLt64_13.dll']:
+                require((stage/'runtime-deps'/name).read_bytes()==(ROOT/'frontend/src-tauri/runtime-deps'/name).read_bytes(), 'Wrong CUDA runtime '+name)
+            os.environ['PATH']=str(stage/'runtime-deps')+os.pathsep+os.environ['PATH']
         smoke(stage)
-    output=DIST/f'Meetily-Ultra_{VERSION}_windows-x64-setup.exe'
+    suffix='-cuda' if VARIANT=='cuda' else ''
+    output=DIST/f'Meetily-Ultra_{VERSION}_windows-x64{suffix}-setup.exe'
     shutil.copy2(installer,output)
 else:
     app=PROFILE/'bundle/macos/Meetily Ultra.app'

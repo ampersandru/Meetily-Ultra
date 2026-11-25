@@ -32,6 +32,7 @@ Get installers from [Meetily Ultra releases](https://github.com/ampersandru/Meet
 | Platform | File | Requirements |
 | --- | --- | --- |
 | Windows | `Meetily-Ultra_0.3.0_windows-x64-setup.exe` | Windows 10/11 x64; CPU transcription, bundled local AI/audio runtimes and Visual C++ installer. |
+| Windows, NVIDIA CUDA | `Meetily-Ultra_0.3.0_windows-x64-cuda-setup.exe` | NVIDIA RTX 20/30/40/50 series or supported datacenter GPU, with a current CUDA 13-compatible driver. |
 | macOS, Apple Silicon | `Meetily-Ultra_0.3.0_macos-arm64.dmg` | macOS 14.2 or newer; Apple Silicon. |
 | macOS, Intel | `Meetily-Ultra_0.3.0_macos-x64.dmg` | macOS 14.2 or newer; Intel processor. |
 
@@ -43,7 +44,7 @@ Ultra installs separately from ActuallyFree. macOS stores Ultra data in `~/Libra
 
 Local transcription and local summaries run on your machine after downloading their models. You can optionally configure cloud providers; doing so sends the relevant meeting content to that provider. Model downloads, update downloads and optional YouTube imports use the network. Choose local models if you need meeting content to remain on-device. Review [the privacy policy](PRIVACY_POLICY.md) and obtain appropriate participant consent before recording.
 
-The first Windows release uses CPU inference for compatibility. The code retains GPU build features, but a separate CUDA/Vulkan installer is not included in this release. The macOS builds use the platform's supported Metal/CoreML paths; model and hardware support vary.
+Windows has separate CPU and NVIDIA CUDA installers. CUDA builds accelerate Whisper and the local AI helper; use the CPU installer on machines without a supported NVIDIA GPU. Choose one Windows installer; changing backends keeps Ultra data. Vulkan is available for source builds but is not a separate installer in this release. The macOS builds use the platform's supported Metal/CoreML paths; model and hardware support vary.
 
 ## Build from source
 
