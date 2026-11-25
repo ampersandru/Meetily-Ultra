@@ -33,6 +33,12 @@ if PLATFORM == 'windows':
             for rel in ['binaries/onnxruntime','runtime-deps']:
                 require((stage/rel/name).read_bytes()==source,'Wrong packaged runtime '+name)
         require((stage/'runtime-deps/vc_redist.x64.exe').stat().st_size>1_000_000,'Missing Visual C++ runtime installer')
+        if os.environ.get('VCToolsVersion'):
+            runtime=str(stage/'runtime-deps/vc_redist.x64.exe').replace("'", "''")
+            actual=run('powershell.exe','-NoProfile','-NonInteractive','-Command',"(Get-Item -LiteralPath '"+runtime+"').VersionInfo.ProductVersion").decode().strip()
+            def version_parts(text): return tuple(int(x) for x in text.split('.'))
+            require(version_parts(actual)>=version_parts(os.environ['VCToolsVersion']), 'Packaged Visual C++ runtime is older than the compiler')
+
         os.environ['PATH']=str(stage/'binaries/onnxruntime')+os.pathsep+os.environ['PATH']
         if VARIANT == 'cuda':
             for name in ['cudart64_13.dll','cublas64_13.dll','cublasLt64_13.dll']:

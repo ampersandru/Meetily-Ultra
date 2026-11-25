@@ -72,9 +72,14 @@ try {
       } elseif (Test-Path $destination) { Remove-Item -LiteralPath $destination }
     }
     $vcRedist = Join-Path $tauri 'runtime-deps/vc_redist.x64.exe'
-    Invoke-WebRequest 'https://aka.ms/vs/17/release/vc_redist.x64.exe' -OutFile $vcRedist
+    Invoke-WebRequest 'https://aka.ms/vs/18/release/vc_redist.x64.exe' -OutFile $vcRedist
     $signature = Get-AuthenticodeSignature -LiteralPath $vcRedist
     if ($signature.Status -ne 'Valid' -or $signature.SignerCertificate.Subject -notmatch 'Microsoft Corporation') { throw 'Visual C++ redistributable signature is invalid' }
+    $runtimeVersion = [version](Get-Item -LiteralPath $vcRedist).VersionInfo.ProductVersion
+    if ($env:VCToolsVersion -and $runtimeVersion -lt [version]$env:VCToolsVersion) {
+      throw "Visual C++ runtime $runtimeVersion is older than compiler $env:VCToolsVersion"
+    }
+
     & node (Join-Path $frontend 'node_modules/@tauri-apps/cli/tauri.js') bundle --target $target --bundles nsis
     if ($LASTEXITCODE -ne 0) { throw 'Ultra installer packaging failed' }
   } finally { Pop-Location }
