@@ -18,7 +18,7 @@ def smoke(sidecars):
     require(any(x.get('type')=='pong' for x in messages), 'llama-helper did not respond')
 if PLATFORM == 'windows':
     installer = next((PROFILE/'bundle/nsis').glob('*.exe'))
-    seven = shutil.which('7z') or r'C:\Program Files-Zipz.exe'
+    seven = shutil.which('7z') or 'C:/Program Files/7-Zip/7z.exe'
     require(pathlib.Path(seven).is_file(), '7-Zip is required for installer verification')
     run(seven,'t',str(installer))
     with tempfile.TemporaryDirectory(prefix='ultra-payload-') as folder:
