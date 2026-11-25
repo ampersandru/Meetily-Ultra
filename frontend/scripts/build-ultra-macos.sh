@@ -6,6 +6,34 @@ cd "$REPO_DIR"
 export MACOSX_DEPLOYMENT_TARGET=14.2
 export NEXT_TELEMETRY_DISABLED=1
 export PNPM_CONFIG_ENABLE_GLOBAL_VIRTUAL_STORE=false
+# A verified artifact may be reused only from this trusted release workflow,
+# with byte-identical application inputs. Packaging-only fixes need not recompile it.
+if [[ "$TARGET" == "x86_64-apple-darwin" && -n "${ULTRA_REUSE_INTEL_RUN:-}" ]]; then
+  [[ "$ULTRA_REUSE_INTEL_RUN" =~ ^[0-9]+$ ]] || { echo 'Invalid artifact run'; exit 1; }
+  IFS=$'\t' read -r SOURCE_SHA SOURCE_WORKFLOW SOURCE_EVENT SOURCE_BRANCH SOURCE_ACTOR < <(
+    gh api "repos/$GITHUB_REPOSITORY/actions/runs/$ULTRA_REUSE_INTEL_RUN" --jq '[.head_sha,.path,.event,.head_branch,.actor.login] | @tsv'
+  )
+  [[ "$SOURCE_SHA" =~ ^[0-9a-f]{40}$ && "$SOURCE_WORKFLOW" == '.github/workflows/ultra-release.yml' && "$SOURCE_EVENT" == 'workflow_dispatch' && "$SOURCE_BRANCH" == 'codex/meetily-ultra' && "$SOURCE_ACTOR" == "$GITHUB_REPOSITORY_OWNER" ]] || { echo 'Untrusted artifact source'; exit 1; }
+  git fetch --no-tags --depth=1 origin "$SOURCE_SHA"
+  git diff --exit-code "$SOURCE_SHA" HEAD -- frontend/src frontend/public frontend/src-tauri Cargo.toml Cargo.lock llama-helper frontend/package.json frontend/pnpm-lock.yaml THIRD_PARTY_NOTICES.md LICENSE.md
+  mkdir -p dist-ultra
+  gh run download "$ULTRA_REUSE_INTEL_RUN" --repo "$GITHUB_REPOSITORY" --name ultra-macos-x64 --dir dist-ultra
+  (cd dist-ultra && shasum -a 256 --check *.sha256)
+  SOURCE_DMG=$(find dist-ultra -maxdepth 1 -name '*macos-x64.dmg' -print -quit)
+  test -n "$SOURCE_DMG"
+  MOUNT_POINT=$(mktemp -d)
+  hdiutil attach "$SOURCE_DMG" -nobrowse -readonly -mountpoint "$MOUNT_POINT"
+  trap 'hdiutil detach "$MOUNT_POINT" >/dev/null 2>&1 || true; rmdir "$MOUNT_POINT" || true' EXIT
+  mkdir -p "target/$TARGET/release/bundle/macos" "target/$TARGET/release/bundle/dmg"
+  ditto "$MOUNT_POINT/Meetily Ultra.app" "target/$TARGET/release/bundle/macos/Meetily Ultra.app"
+  hdiutil detach "$MOUNT_POINT"
+  rmdir "$MOUNT_POINT"
+  trap - EXIT
+  cp "$SOURCE_DMG" "target/$TARGET/release/bundle/dmg/Meetily-Ultra.dmg"
+  python3 frontend/scripts/verify-ultra-release.py macos "$TARGET"
+  echo "Verified Intel artifact reused from run $ULTRA_REUSE_INTEL_RUN ($SOURCE_SHA); application inputs identical"
+  exit 0
+fi
 OPENSSL_PREFIX=$(brew --prefix openssl@3)
 export OPENSSL_DIR="$OPENSSL_PREFIX"
 export OPENSSL_ROOT_DIR="$OPENSSL_PREFIX"

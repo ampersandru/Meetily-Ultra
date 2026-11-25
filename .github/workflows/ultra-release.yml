@@ -1,8 +1,14 @@
 name: Release Meetily Ultra
 on:
   workflow_dispatch:
+    inputs:
+      reuse_intel_run:
+        description: 'Optional prior verified Intel artifact run; application sources must match'
+        type: string
+        default: ''
 permissions:
   contents: read
+  actions: read
 concurrency:
   group: ultra-release
   cancel-in-progress: false
@@ -63,15 +69,18 @@ jobs:
           cache: pnpm
           cache-dependency-path: frontend/pnpm-lock.yaml
       - uses: dtolnay/rust-toolchain@stable
+        if: matrix.platform != 'macos-x64' || inputs.reuse_intel_run == ''
         with:
           toolchain: 1.97.1
           targets: ${{ matrix.target }}
       - uses: swatinem/rust-cache@v2
+        if: matrix.platform != 'macos-x64' || inputs.reuse_intel_run == ''
         with:
           workspaces: '. -> target'
           key: ultra-${{ matrix.target }}-v1
           cache-on-failure: true
       - name: Install frontend dependencies
+        if: matrix.platform != 'macos-x64' || inputs.reuse_intel_run == ''
         working-directory: frontend
         run: pnpm install --frozen-lockfile
       - name: Build and verify Windows
@@ -79,12 +88,14 @@ jobs:
         shell: pwsh
         run: ./frontend/scripts/build-ultra-windows.ps1
       - name: Install OpenSSL headers
-        if: runner.os == 'macOS'
+        if: runner.os == 'macOS' && (matrix.platform != 'macos-x64' || inputs.reuse_intel_run == '')
         run: brew list --versions openssl@3 >/dev/null || brew install openssl@3
       - name: Build and verify macOS
         if: runner.os == 'macOS'
         env:
           TARGET: ${{ matrix.target }}
+          ULTRA_REUSE_INTEL_RUN: ${{ inputs.reuse_intel_run }}
+          GH_TOKEN: ${{ github.token }}
         run: bash frontend/scripts/build-ultra-macos.sh "$TARGET"
       - uses: actions/upload-artifact@v4
         with:
