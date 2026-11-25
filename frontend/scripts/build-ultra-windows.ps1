@@ -40,8 +40,8 @@ if ($Cuda) {
   if (-not $env:CUDA_PATH -or -not (Test-Path "$env:CUDA_PATH/bin/nvcc.exe")) { throw 'CUDA 13 toolkit is required for -Cuda' }
   $env:CUDA_TOOLKIT_ROOT_DIR = $env:CUDA_PATH
   $env:PATH = "$env:CUDA_PATH/bin;$env:CUDA_PATH/bin/x64;$env:PATH"
-  # Ship SASS for RTX 20/30/40/50 and datacenter Ampere/Hopper/Blackwell.
-  $env:CMAKE_CUDA_ARCHITECTURES = '75;80;86;89;90;100;120'
+  # Ship SASS for desktop RTX 20/30/40/50 and Ampere SM80.
+  $env:CMAKE_CUDA_ARCHITECTURES = '75;80;86;89;120'
   $env:CL = '/DCCCL_IGNORE_DEPRECATED_CPP_DIALECT /DCCCL_IGNORE_MSVC_TRADITIONAL_PREPROCESSOR_WARNING /Zc:preprocessor'
   $env:_CL_ = $env:CL
   $env:NVCC_APPEND_FLAGS = '-std=c++17 -Xcompiler=/Zc:preprocessor -DCCCL_IGNORE_MSVC_TRADITIONAL_PREPROCESSOR_WARNING'

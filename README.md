@@ -32,7 +32,7 @@ Get installers from [Meetily Ultra releases](https://github.com/ampersandru/Meet
 | Platform | File | Requirements |
 | --- | --- | --- |
 | Windows | `Meetily-Ultra_0.3.0_windows-x64-setup.exe` | Windows 10/11 x64; CPU transcription, bundled local AI/audio runtimes and Visual C++ installer. |
-| Windows, NVIDIA CUDA | `Meetily-Ultra_0.3.0_windows-x64-cuda-setup.exe` | NVIDIA RTX 20/30/40/50 series or supported datacenter GPU, with a current CUDA 13-compatible driver. |
+| Windows, NVIDIA CUDA | `Meetily-Ultra_0.3.0_windows-x64-cuda-setup.exe` | NVIDIA RTX 20/30/40/50 series or Ampere SM80 GPU, with a current CUDA 13-compatible driver. |
 | macOS, Apple Silicon | `Meetily-Ultra_0.3.0_macos-arm64.dmg` | macOS 14.2 or newer; Apple Silicon. |
 | macOS, Intel | `Meetily-Ultra_0.3.0_macos-x64.dmg` | macOS 14.2 or newer; Intel processor. |
 
