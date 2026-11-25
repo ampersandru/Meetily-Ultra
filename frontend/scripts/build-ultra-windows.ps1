@@ -59,7 +59,7 @@ try {
   Copy-Item "target/$target/release/llama-helper.exe" "$tauri/binaries/llama-helper-$target.exe" -Force
   Push-Location $frontend
   try {
-    pnpm exec tauri build --target $target --no-bundle -- --no-default-features --features $features
+    & node (Join-Path $frontend 'node_modules/@tauri-apps/cli/tauri.js') build --target $target --no-bundle -- --no-default-features --features $features
     if ($LASTEXITCODE -ne 0) { throw 'Ultra application build failed' }
     foreach ($file in Get-ChildItem "$tauri/binaries/onnxruntime" -File) { Copy-Item $file.FullName (Join-Path $tauri 'runtime-deps') -Force }
     foreach ($name in $cudaDlls) {
@@ -75,7 +75,7 @@ try {
     Invoke-WebRequest 'https://aka.ms/vs/17/release/vc_redist.x64.exe' -OutFile $vcRedist
     $signature = Get-AuthenticodeSignature -LiteralPath $vcRedist
     if ($signature.Status -ne 'Valid' -or $signature.SignerCertificate.Subject -notmatch 'Microsoft Corporation') { throw 'Visual C++ redistributable signature is invalid' }
-    pnpm exec tauri bundle --target $target --bundles nsis
+    & node (Join-Path $frontend 'node_modules/@tauri-apps/cli/tauri.js') bundle --target $target --bundles nsis
     if ($LASTEXITCODE -ne 0) { throw 'Ultra installer packaging failed' }
   } finally { Pop-Location }
   $env:PATH = "$tauri/binaries/onnxruntime;$env:PATH"
