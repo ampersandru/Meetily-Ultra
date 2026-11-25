@@ -1,0 +1,45 @@
+name: Build verified Ultra Windows installer
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ultra-windows-verified
+  cancel-in-progress: false
+jobs:
+  windows:
+    runs-on: windows-2022
+    timeout-minutes: 90
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+      PNPM_CONFIG_ENABLE_GLOBAL_VIRTUAL_STORE: 'false'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.9.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: 1.97.1
+          targets: x86_64-pc-windows-msvc
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: '. -> target'
+          key: ultra-x86_64-pc-windows-msvc-v1
+          cache-on-failure: true
+      - run: pnpm install --frozen-lockfile
+        working-directory: frontend
+      - name: Build and verify CPU installer and native tests
+        shell: pwsh
+        run: ./frontend/scripts/build-ultra-windows.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ultra-windows
+          path: dist-ultra/*
+          if-no-files-found: error
+          retention-days: 14
