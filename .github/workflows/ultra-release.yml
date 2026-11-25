@@ -77,7 +77,10 @@ jobs:
         if: matrix.platform != 'macos-x64' || inputs.reuse_intel_run == ''
         with:
           workspaces: '. -> target'
+          prefix-key: ${{ runner.os == 'macOS' && 'ultra-macos-sdkclean-v2' || 'v0-rust' }}
           key: ultra-${{ matrix.target }}-v1
+          cache-targets: ${{ runner.os != 'macOS' }}
+          cache-directories: ${{ runner.os == 'macOS' && '~/Library/Caches/ort.pyke.io' || '' }}
           cache-on-failure: true
       - name: Install frontend dependencies
         if: matrix.platform != 'macos-x64' || inputs.reuse_intel_run == ''
