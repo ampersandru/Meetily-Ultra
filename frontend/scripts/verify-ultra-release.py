@@ -53,6 +53,13 @@ else:
     for executable in ['meetily-ultra','ffmpeg','llama-helper']:
         file=app/'Contents/MacOS'/executable
         require(architecture in run('lipo','-archs',str(file)).decode(),'Wrong architecture '+executable)
+        build_info=run('xcrun','vtool','-show-build',str(file)).decode()
+        import re
+        minimum=re.search(r'\bminos\s+([0-9.]+)',build_info)
+        require(minimum is not None,'Missing Mach-O deployment target '+executable)
+        parts=tuple(int(x) for x in minimum.group(1).split('.'))
+        require((parts+(0,0))[:3] <= (14,2,0),'Binary requires newer macOS: '+executable)
+
     for rel in ['templates/standard_meeting.json','resources/diarization/segmentation-3.0-fp16.onnx','resources/diarization/wespeaker-resnet34-LM.onnx','resources/diarization/xvec_transform.npz','icon.icns']:
         require((app/'Contents/Resources'/rel).exists(),'Missing bundled resource '+rel)
     run('codesign','--verify','--deep','--strict',str(app))
