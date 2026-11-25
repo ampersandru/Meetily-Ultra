@@ -31,9 +31,13 @@ codesign --force --sign - --timestamp=none --options runtime --entitlements fron
 codesign --verify --deep --strict "$APP"
 cargo test --locked --release -p meetily --lib --target "$TARGET" audio::capture_worker:: -- --test-threads=1
 cargo test --locked --release -p meetily --lib --target "$TARGET" audio::pipeline::ring_buffer_tests:: -- --test-threads=1
+# Tests have finished. Preserve app/binaries, but reclaim intermediate Rust outputs
+# before copying the bundle and creating a second filesystem image on small runners.
+python3 frontend/scripts/cleanup-ultra-macos-build.py "$TARGET"
+df -h .
 STAGING=$(mktemp -d)
 trap 'rm -rf "$STAGING"' EXIT
-ditto "$APP" "$STAGING/Meetily Ultra.app"
+cp -cR "$APP" "$STAGING/Meetily Ultra.app" || ditto "$APP" "$STAGING/Meetily Ultra.app"
 ln -s /Applications "$STAGING/Applications"
 mkdir -p "target/$TARGET/release/bundle/dmg"
 hdiutil create -volname "Meetily Ultra" -srcfolder "$STAGING" -ov -format UDZO "target/$TARGET/release/bundle/dmg/Meetily-Ultra.dmg"

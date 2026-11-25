@@ -70,6 +70,7 @@ jobs:
         with:
           workspaces: '. -> target'
           key: ultra-${{ matrix.target }}-v1
+          cache-on-failure: true
       - name: Install frontend dependencies
         working-directory: frontend
         run: pnpm install --frozen-lockfile

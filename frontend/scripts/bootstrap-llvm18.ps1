@@ -22,11 +22,13 @@ $archive = Join-Path $ToolRoot "clang+llvm-18.1.8-x86_64-pc-windows-msvc.tar.xz"
 $expectedSha256 = "22C5907DB053026CC2A8FF96D21C0F642A90D24D66C23C6D28EE7B1D572B82E8"
 if (-not (Test-Path $archive)) {
   Write-Host "Downloading portable LLVM 18 (required for whisper-rs Windows bindings)…"
-  gh release download llvmorg-18.1.8 `
-    --repo llvm/llvm-project `
-    --pattern "clang+llvm-18.1.8-x86_64-pc-windows-msvc.tar.xz" `
-    --dir $ToolRoot
-  if ($LASTEXITCODE -ne 0) { throw "Failed to download LLVM 18" }
+  # Public asset download needs no gh login; bound connection/transfer/retry time.
+  $partial = "$archive.partial"
+  & curl.exe --fail --location --retry 2 --retry-all-errors --retry-max-time 900 `
+    --connect-timeout 30 --max-time 600 --output $partial `
+    'https://github.com/llvm/llvm-project/releases/download/llvmorg-18.1.8/clang%2Bllvm-18.1.8-x86_64-pc-windows-msvc.tar.xz'
+  if ($LASTEXITCODE -ne 0) { throw "Failed to download LLVM 18 within the bounded download window" }
+  Move-Item -LiteralPath $partial -Destination $archive -Force
 }
 $actualSha256 = (Get-FileHash $archive -Algorithm SHA256).Hash
 if ($actualSha256 -ne $expectedSha256) {

@@ -1,3 +1,4 @@
+import { AUTO_UPDATES_ENABLED } from '@/lib/branding';
 import React, { useEffect, useState } from 'react';
 import { invoke } from '@tauri-apps/api/core';
 import { Lock, Sparkles, Cpu, RefreshCw } from 'lucide-react';
@@ -9,7 +10,7 @@ import { usePlatform } from '@/hooks/usePlatform';
 export function WelcomeStep() {
   const { goNext } = useOnboarding();
   const platform = usePlatform();
-  const updatesSupported = platform !== 'macos';
+  const updatesSupported = AUTO_UPDATES_ENABLED && platform !== 'macos';
   const [checkUpdates, setCheckUpdates] = useState<boolean | null>(null);
   const [saving, setSaving] = useState(false);
 
