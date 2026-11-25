@@ -18,9 +18,11 @@ def smoke(sidecars):
     require(any(x.get('type')=='pong' for x in messages), 'llama-helper did not respond')
 if PLATFORM == 'windows':
     installer = next((PROFILE/'bundle/nsis').glob('*.exe'))
-    run('7z','t',str(installer))
+    seven = shutil.which('7z') or r'C:\Program Files-Zipz.exe'
+    require(pathlib.Path(seven).is_file(), '7-Zip is required for installer verification')
+    run(seven,'t',str(installer))
     with tempfile.TemporaryDirectory(prefix='ultra-payload-') as folder:
-        run('7z','x',str(installer),'-o'+folder,'-y','meetily-ultra.exe','ffmpeg.exe','llama-helper.exe','runtime-deps/*','binaries/onnxruntime/*')
+        run(seven,'x',str(installer),'-o'+folder,'-y','meetily-ultra.exe','ffmpeg.exe','llama-helper.exe','runtime-deps/*','binaries/onnxruntime/*')
         stage = pathlib.Path(folder)
         packaged = (stage/'meetily-ultra.exe').read_bytes().replace(b'__TAURI_BUNDLE_TYPE_VAR_NSS',b'__TAURI_BUNDLE_TYPE_VAR_UNK')
         require(packaged == (PROFILE/'meetily-ultra.exe').read_bytes(), 'Wrong packaged application')
