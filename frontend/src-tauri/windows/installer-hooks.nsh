@@ -392,15 +392,12 @@ Var MeetilyCudaNotice
   DetailPrint " Runtime setup"
   DetailPrint "────────────────────────────────────────"
 
-  DetailPrint "[1/4] Visual C++ 2015–2022 (x64)…"
+  DetailPrint "[1/4] Visual C++ runtime (x64)…"
   !insertmacro MeetilyReportProgress 80
-  !insertmacro Meetily_CheckVcredist
-  ${If} $R9 == 0
-    DetailPrint "      Not found — installing quietly…"
-    !insertmacro Meetily_InstallVcredist
-  ${Else}
-    DetailPrint "      Already installed — skipped."
-  ${EndIf}
+  ; Installed=1 does not prove the runtime is new enough for this compiler.
+  ; The bundled Microsoft installer handles upgrade/repair; 1638 means newer exists.
+  DetailPrint "      Ensuring the compiler-compatible runtime is installed…"
+  !insertmacro Meetily_InstallVcredist
 
   DetailPrint "[2/4] Common local AI runtime…"
   !insertmacro MeetilyReportProgress 85

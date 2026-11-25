@@ -15,7 +15,7 @@ if [[ "$TARGET" == "x86_64-apple-darwin" && -n "${ULTRA_REUSE_INTEL_RUN:-}" ]]; 
   )
   [[ "$SOURCE_SHA" =~ ^[0-9a-f]{40}$ && "$SOURCE_WORKFLOW" == '.github/workflows/ultra-release.yml' && "$SOURCE_EVENT" == 'workflow_dispatch' && "$SOURCE_BRANCH" == 'codex/meetily-ultra' && "$SOURCE_ACTOR" == "$GITHUB_REPOSITORY_OWNER" ]] || { echo 'Untrusted artifact source'; exit 1; }
   git fetch --no-tags --depth=1 origin "$SOURCE_SHA"
-  git diff --exit-code "$SOURCE_SHA" HEAD -- frontend/src frontend/public frontend/src-tauri Cargo.toml Cargo.lock llama-helper frontend/package.json frontend/pnpm-lock.yaml THIRD_PARTY_NOTICES.md LICENSE.md
+  git diff --exit-code "$SOURCE_SHA" HEAD -- frontend/src frontend/public frontend/src-tauri Cargo.toml Cargo.lock llama-helper frontend/package.json frontend/pnpm-lock.yaml THIRD_PARTY_NOTICES.md LICENSE.md ':(exclude)frontend/src-tauri/windows/**'
   mkdir -p dist-ultra
   gh run download "$ULTRA_REUSE_INTEL_RUN" --repo "$GITHUB_REPOSITORY" --name ultra-macos-x64 --dir dist-ultra
   (cd dist-ultra && shasum -a 256 --check *.sha256)
