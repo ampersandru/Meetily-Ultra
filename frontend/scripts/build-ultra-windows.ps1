@@ -1,11 +1,16 @@
-param([switch]$Cuda, [string]$LlvmDir)
+param([switch]$Cuda, [string]$LlvmDir, [string]$VsInstall)
 
 $ErrorActionPreference = 'Stop'
 $frontend = Split-Path $PSScriptRoot -Parent
 $repo = Split-Path $frontend -Parent
 $tauri = Join-Path $frontend 'src-tauri'
 $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio/Installer/vswhere.exe'
-$vsInstall = (& $vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath).Trim()
+if (-not $VsInstall) {
+  $VsInstall = (& $vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath | Select-Object -First 1)
+}
+if (-not $VsInstall -or -not (Test-Path (Join-Path $VsInstall 'VC/Auxiliary/Build/vcvars64.bat'))) {
+  throw 'Visual Studio C++ tools were not discovered. Pass -VsInstall with the supported installation directory.'
+}
 $vcvars = Join-Path $vsInstall 'VC/Auxiliary/Build/vcvars64.bat'
 cmd /c "call `"$vcvars`" >nul 2>&1 && set" | ForEach-Object {
   if ($_ -match '^([^=]+)=(.*)$') { [Environment]::SetEnvironmentVariable($matches[1], $matches[2], 'Process') }
